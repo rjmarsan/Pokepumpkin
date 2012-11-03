@@ -14,9 +14,9 @@ int SB_GreenCommand;
 int SB_BlueCommand;
 
 /********* touch detection stuff ************/
-#define TOUT 8
-#define TIN 9
-#define TGUARD 10
+#define TOUT 7
+#define TIN 6
+#define TGUARD 5
 
 int  i;
 unsigned int x, y;
