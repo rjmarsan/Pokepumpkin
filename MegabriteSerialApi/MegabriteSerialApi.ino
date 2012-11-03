@@ -3,7 +3,7 @@
 #define latchpin 9 // LI
 #define datapin 11 // DI
  
-#define NumLEDs 1
+#define NumLEDs 2
  
 int LEDChannels[NumLEDs][3] = {0};
 int SB_CommandMode;
