@@ -11,9 +11,9 @@ ser = serial.Serial('/dev/tty.usbserial-A9015RB1', 115200)
 def write(array):
     towrite = ""
     for LED, (R,G,B) in enumerate(array):
-        R = round(R)
-        G = round(G)
-        B = round(B)
+        R = roundClamp(R)
+        G = roundClamp(G)
+        B = roundClamp(B)
         towrite += "%d %d %d %dn"%(LED, R, G, B)
     towrite += "W"
     ser.write(towrite)
@@ -22,10 +22,22 @@ def write(array):
 def clear():
     ser.write('C')
 
+"""
+    colors go from 0 to 1023
+"""
+def writeAll(R,G,B):
+    R = roundClamp(R)
+    G = roundClamp(G)
+    B = roundClamp(B)
+    write([(R,G,B)]*2)
+
+def roundClamp(value):
+    return min(1023, max(0, round(value)))
+
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) > 1 and sys.argv[1] == "clear":
+    if len(sys.argv) == 2 and sys.argv[1] == "clear":
         clear()
-    else:
-        write([ (300,700,0)   ])
+    elif len(sys.argv) == 4:
+        writeAll(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
