@@ -1,6 +1,8 @@
 import serial
+from threading import Thread
 
-ser = serial.Serial('/dev/tty.usbserial-A9015RB1', 115200)
+#ser = serial.Serial('/dev/tty.usbserial-A9015RB1', 115200)
+ser = serial.Serial('/dev/tty.usbmodemfa141', 115200)
 #ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 
@@ -34,6 +36,23 @@ def writeAll(R,G,B):
 def roundClamp(value):
     return min(1023, max(0, round(value)))
 
+def watchForTouch(callback):
+    while True:
+        line = ser.readline()
+        print "line: "+line
+        vals = line.split()
+        print "split: "+str(vals)
+        try:
+            if int(vals[1]) > 3:
+                print "TOUCH"
+        except:
+            pass
+
+def launchThread(callback):
+    thread = Thread(target = watchForTouch, args = (callback, ))
+    thread.start()
+
+
 
 if __name__ == "__main__":
     import sys
@@ -41,3 +60,6 @@ if __name__ == "__main__":
         clear()
     elif len(sys.argv) == 4:
         writeAll(int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]))
+    if len(sys.argv) == 2 and sys.argv[1] == "watch":
+        launchThread(None)
+
